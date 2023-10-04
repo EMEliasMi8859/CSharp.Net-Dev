@@ -1,0 +1,17 @@
+create table Customers(ID int PRIMARY KEY IDENTITY not null, "Name" varchar(50) not null,"FName" varchar(50) not null, "Address" varchar(70) null, "Phone" varchar(15) not null,"Phone" varchar(15) not null, "Image" varchar(30) null)
+create table Products(ID int PRIMARY KEY IDENTITY not null, "Name" varchar(50) not null,"CompanyName" varchar(70) not null, "Price" money not null ,"Image" varchar(30) null)
+create table Vendors(ID int PRIMARY KEY IDENTITY not null, "Name" varchar(50) not null,"FName" varchar(50) not null, "Address" varchar(70) null,"Phone" varchar(15) not null, "Email" varchar(50) null)
+create table Sales(BellNo int IDENTITY(1,1) PRIMARY KEY not null, "CusID" int not null,"PrdID" int not null, "Quantity" int, "Price" money not null,"Date" Date Default GETDATE() not null, FOREIGN KEY(CusID)REFERENCES Customers(ID), FOREIGN KEY(PrdID)REFERENCES Products(ID));
+create table Purchases(ID int IDENTITY(1,1) PRIMARY KEY not null, "VndID" int not null,"PrdID" int not null, "Quantity" int,"Date" Date Default GETDATE() not null, FOREIGN KEY(VndID)REFERENCES Vendors(ID), FOREIGN KEY(PrdID)REFERENCES Products(ID));
+create table create table SalesPayments(BellNo int not null, Payment money not null,Loans money not null, "Currency" varchar(3) not null default 'AFG',TellerTransID int null, "Date" Date Default GETDATE() not null, FOREIGN KEY(BellNo)REFERENCES Sales(BellNo), FOREIGN KEY(TellerTransID) REFERENCES TellersTransactions(TnsNo))
+create table PurchasesPayments(PchID int not null, Payment money not null,Loans money not null, "Currency" varchar(3) not null default 'AFG',TellerTransID int null, "Date" Date Default GETDATE() not null, FOREIGN KEY(PchID)REFERENCES Purchases(ID), FOREIGN KEY(TellerTransID) REFERENCES TellersTransactions(TnsNo));
+create table Tellers(ID int PRIMARY KEY IDENTITY(1,1), "Name" varchar(50) not null, OfficeNo int not null, Phone varchar(15), "Address" varchar(70) null)
+create table TellersTransactions(TnsNo int PRIMARY KEY IDENTITY(1,1), TID int not null, BellNo int null, HawalaNo int null, Payment money not null, Payout money not null, Currency varchar(3) default 'AFG', "Date" date default GETDATE(), FOREIGN KEY(TID) REFERENCES Tellers(ID), FOREIGN KEY(BellNo) REFERENCES Sales(BellNo))
+create table Accounts(Cash money not null, Teller money not null, Loans money not null, "Date" date default GETDate() not null);
+create table Expenses(ID int PRIMARY KEY IDENTITY(1,1) , Descriptions varchar(150) null, Amount money not null, Currency varchar(3) default 'AFG' not null, "Date" date default GETDate() not null);
+create table ReturnStocks(ID int PRIMARY KEY IDENTITY(1,1) , BellNo int not null, Quantity int not null, "Date" date default GETDate() not null, FOREIGN KEY(BellNo) REFERENCES Sales(BellNo));
+create table ReturnStocksTransactions(ID int PRIMARY KEY IDENTITY(1,1) , RSID int null, Payout money null, "Date" date default GETDate() not null, FOREIGN KEY(RSID) REFERENCES ReturnStocks(ID));
+create table Stocks(ID int PRIMARY KEY IDENTITY(1,1) , PID int not null, RemainingStock int not null, FOREIGN KEY(PID) REFERENCES Products(ID));
+create table StockHolders(ID int PRIMARY KEY IDENTITY not null, "Name" varchar(50) not null,"FName" varchar(50) not null, "Investment" money not null, "StockShare" decimal(5,2) not null,"Phone" varchar(15) not null)
+create table StockHoldersPayments(SHID int not null, "Payment" money null,"Payout" money null, "Date" date default getdate() not null, FOREIGN KEY(SHID)REFERENCES StockHolders(ID));
+
